@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/vadimkolobanov/code_chest/badge?s=0bf7efdd061802086af219e7ec053640a29fb917)](https://www.codefactor.io/repository/github/vadimkolobanov/code_chest)
+
 #💻 Code Chest
 ***
 ###Описание

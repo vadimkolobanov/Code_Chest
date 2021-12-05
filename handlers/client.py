@@ -13,7 +13,7 @@ async def command_start(message: types.Message):
         await message.reply('Для общения с ботом через ЛС, необходимо ему написать')
 
 
-# Этот хэндлер отправляет кнопку, которая удаляет клавиатуру, и вызвать ее можно только через /start
+# Этот хэндлер отправляет кнопку, которая удаляет клавиатуру, и вызвать снова ее можно только через /start
 async def stop_work(message: types.Message):
     await bot.send_message(message.from_user.id, 'Работа завершена', reply_markup=ReplyKeyboardRemove())
 

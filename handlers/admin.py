@@ -1,9 +1,9 @@
 from aiogram import types, Dispatcher
-from create_bot import bot
-from keyboards import kb_client
-from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
+
+from create_bot import bot
+from keyboards import kb_client, kb_lvl, kb_lang, kb_action
 
 
 # Это класс машины состояний, тоесь поля которые нужно вводить пользователю
@@ -12,12 +12,13 @@ class FSMAdmin(StatesGroup):
     language = State()
     name = State()
     description = State()
+    action = State()
 
 
 # Это функция начала ввода она вызывается по команде /предложить ( указано внизу при регистрации Хэндлера)
 async def cm_start(message: types.Message):
     await FSMAdmin.level.set()
-    await message.reply("Укажите уровень сложности проекта (1-5)")
+    await message.reply("Укажите уровень сложности проекта (1-5)", reply_markup=kb_lvl)
 
 
 # Хэндлер записывает введенный уровень
@@ -25,7 +26,7 @@ async def add_lvl(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['level'] = message.text
     await FSMAdmin.next()
-    await message.reply("Введите Язык программирования")
+    await message.reply("Введите Язык программирования", reply_markup=kb_lang)
 
 
 # Хэндлер записывает введенный язык программирования
@@ -48,11 +49,20 @@ async def add_name(message: types.Message, state: FSMContext):
 async def add_description(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['description'] = message.text
+    await FSMAdmin.next()
+    await bot.send_message(message.from_user.id, 'Выберите действие', reply_markup=kb_action)
 
-    async with state.proxy() as data:
-        await message.reply(str(data))
 
-    await state.finish()  # эта команда убивает машину состояний, поэтому все действия должны быть сделаны до нее
+async def action_user(message: types.Message, state: FSMContext):
+    if message.text == "Отправить на модерацию":
+        async with state.proxy() as data:
+            await bot.send_message(message.from_user.id, 'Отправка на модерацию')
+            await message.reply(str(data))
+            await bot.send_message(message.from_user.id, 'Возврат в меню', reply_markup=kb_client)
+            await state.finish()
+    else:
+        await state.finish()
+        await bot.send_message(message.from_user.id, 'Возврат в меню', reply_markup=kb_client)
 
 
 # Регистрация всех хэндлеров
@@ -62,3 +72,4 @@ def register_handlers_admin(dp: Dispatcher):
     dp.register_message_handler(add_language, state=FSMAdmin.language)
     dp.register_message_handler(add_name, state=FSMAdmin.name)
     dp.register_message_handler(add_description, state=FSMAdmin.description)
+    dp.register_message_handler(action_user, state=FSMAdmin.action)

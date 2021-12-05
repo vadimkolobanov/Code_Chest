@@ -5,6 +5,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot
 from keyboards import kb_client, kb_lvl, kb_lang, kb_action
 
+from database import sqlite
 
 # Это класс машины состояний, тоесь поля которые нужно вводить пользователю
 class FSMAdmin(StatesGroup):
@@ -33,6 +34,7 @@ async def add_lvl(message: types.Message, state: FSMContext):
 async def add_language(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['language'] = message.text
+        # data['user']=message.from_user.id
     await FSMAdmin.next()
     await message.reply("Введите название проекта")
 
@@ -55,11 +57,13 @@ async def add_description(message: types.Message, state: FSMContext):
 
 async def action_user(message: types.Message, state: FSMContext):
     if message.text == "Отправить на модерацию":
-        async with state.proxy() as data:
-            await bot.send_message(message.from_user.id, 'Отправка на модерацию')
-            await message.reply(str(data))
-            await bot.send_message(message.from_user.id, 'Возврат в меню', reply_markup=kb_client)
-            await state.finish()
+
+        await bot.send_message(message.from_user.id, 'Отправка на модерацию')
+
+        await sqlite.sql_add_project(state=state)
+
+        await bot.send_message(message.from_user.id, 'Возврат в меню', reply_markup=kb_client)
+        await state.finish()
     else:
         await state.finish()
         await bot.send_message(message.from_user.id, 'Возврат в меню', reply_markup=kb_client)

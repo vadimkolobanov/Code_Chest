@@ -2,7 +2,7 @@ from aiogram import types, Dispatcher
 from create_bot import bot
 from keyboards import kb_client
 from aiogram.types import ReplyKeyboardRemove
-
+from database import sqlite
 
 # Это хэндлер, он реагирует на команду /start /help и пишет привет
 async def command_start(message: types.Message):
@@ -18,8 +18,13 @@ async def stop_work(message: types.Message):
     await bot.send_message(message.from_user.id, 'Работа завершена', reply_markup=ReplyKeyboardRemove())
 
 
+async def get_projects(message: types.Message):
+    await sqlite.sql_read(message)
+
+
 # Здесь нужно регистрировать все новые хэндлеры
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(command_start, commands=['start',
                                                          'help'])  # Пример зарегистрированного хэндлера здесь указывают команды.
     dp.register_message_handler(stop_work, commands=['stop'])
+    dp.register_message_handler(get_projects, commands=['Получить'])

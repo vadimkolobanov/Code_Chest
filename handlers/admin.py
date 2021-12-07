@@ -7,7 +7,7 @@ from keyboards import kb_client, kb_lvl, kb_lang, kb_action
 
 from database import sqlite
 
-# Это класс машины состояний, тоесь поля которые нужно вводить пользователю
+# Это класс машины состояний, тоесь поля которые нужно вводить пользователю (Админ)
 class FSMAdmin(StatesGroup):
     level = State()
     language = State()
@@ -18,7 +18,7 @@ class FSMAdmin(StatesGroup):
 
 # Это функция начала ввода она вызывается по команде /предложить ( указано внизу при регистрации Хэндлера)
 async def cm_start(message: types.Message):
-    await FSMAdmin.level.set()
+    await FSMAdmin.level.set()  # отсюда перекидывает в функцию, в которой state = FSMAdmin.level
     await message.reply("Укажите уровень сложности проекта (1-5)", reply_markup=kb_lvl)
 
 
@@ -26,7 +26,7 @@ async def cm_start(message: types.Message):
 async def add_lvl(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['level'] = message.text
-    await FSMAdmin.next()
+    await FSMAdmin.next()  # перекидывает на следующую функцию, в порядке состояний в классе FSMAdmin
     await message.reply("Введите Язык программирования", reply_markup=kb_lang)
 
 
@@ -65,14 +65,14 @@ async def action_user(message: types.Message, state: FSMContext):
         await bot.send_message(message.from_user.id, 'Возврат в меню', reply_markup=kb_client)
         await state.finish()
     else:
-        await state.finish()
+        await state.finish()  # Убивает машину состояний, обязательно иначе кнопки не обновятся
         await bot.send_message(message.from_user.id, 'Возврат в меню', reply_markup=kb_client)
 
 
 # Регистрация всех хэндлеров
 def register_handlers_admin(dp: Dispatcher):
-    dp.register_message_handler(cm_start, commands='Предложить', state=None)
-    dp.register_message_handler(add_lvl, content_types=['text'], state=FSMAdmin.level)
+    dp.register_message_handler(cm_start, commands='Предложить', state=None)  # здесь должна стартовать машина состояний
+    dp.register_message_handler(add_lvl, content_types=['text'], state=FSMAdmin.level)  # content_types не обязателен
     dp.register_message_handler(add_language, state=FSMAdmin.language)
     dp.register_message_handler(add_name, state=FSMAdmin.name)
     dp.register_message_handler(add_description, state=FSMAdmin.description)

@@ -1,5 +1,7 @@
 import sqlite3 as sql
 from create_bot import bot
+import random
+from keyboards import kb_client
 
 
 def sql_start():
@@ -18,7 +20,16 @@ async def sql_add_project(state):
         base.commit()
 
 
-async def sql_read(message):
-    for answer in cursor.execute("SELECT * FROM projects").fetchall():
-        await bot.send_message(message.from_user.id,
-                               f'Уровень {answer[0]}\n Язык {answer[1]}\n Название проекта {answer[2]}\n Описание {answer[3]}')
+async def sql_read(message, state):
+    async with state.proxy() as data:
+        try:
+            execute = cursor.execute(
+                f"SELECT * FROM projects WHERE level == '{data['choise_level']}' AND language LIKE '{data['choise_lang']}'")
+            result = execute.fetchall()
+            answer = result[random.randint(0, len(result) - 1)]
+            await bot.send_message(message.from_user.id,
+                                   f'Уровень {answer[0]}\n Язык {answer[1]}\n Название проекта {answer[2]}\n Описание {answer[3]}',
+                                   reply_markup=kb_client)
+
+        except:
+            await bot.send_message(message.from_user.id, "Проектов по заданным критериям нет", reply_markup=kb_client)

@@ -3,11 +3,11 @@ from create_bot import bot
 import random
 from keyboards import kb_client
 
+global base, cursor
 
 def sql_start():
-    global base, cursor
+
     base = sql.connect('code_chest.db')
-    cursor = base.cursor()
     if base:
         print('Connected to database')
     base.execute("CREATE TABLE if NOT EXISTS projects(level TEXT, language TEXT, name TEXT, description TEXT)")
@@ -31,5 +31,5 @@ async def sql_read(message, state):
                                    f'Уровень {answer[0]}\n Язык {answer[1]}\n Название проекта {answer[2]}\n Описание {answer[3]}',
                                    reply_markup=kb_client)
 
-        except:
+        except Exception:
             await bot.send_message(message.from_user.id, "Проектов по заданным критериям нет", reply_markup=kb_client)

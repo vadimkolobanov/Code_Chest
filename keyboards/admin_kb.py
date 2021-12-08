@@ -1,5 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-
+from create_bot import config
 # Кнопки выбора языка
 lang_b1 = KeyboardButton('Python')
 
@@ -11,8 +11,8 @@ lvl_buttons_4 = KeyboardButton('4')
 lvl_buttons_5 = KeyboardButton('5')
 
 # Кнопки действий
-action_b1 = KeyboardButton('Отправить на модерацию')
-action_b2 = KeyboardButton('Отменить')
+action_b1 = KeyboardButton(config.get('RUSSIAN', 'admin_b1_text'))
+action_b2 = KeyboardButton(config.get('RUSSIAN', 'admin_b2_text'))
 
 kb_lvl = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 kb_lvl.row(lvl_buttons_1, lvl_buttons_2, lvl_buttons_3).row(lvl_buttons_4, lvl_buttons_5)

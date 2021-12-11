@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from create_bot import config
 # Кнопки выбора языка
 lang_b1 = KeyboardButton('Python')
@@ -14,6 +14,8 @@ lvl_buttons_5 = KeyboardButton('5')
 action_b1 = KeyboardButton(config.get('RUSSIAN', 'admin_b1_text'))
 action_b2 = KeyboardButton(config.get('RUSSIAN', 'admin_b2_text'))
 
+delete_button = InlineKeyboardButton('Удалить', callback_data='delete')
+
 kb_lvl = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 kb_lvl.row(lvl_buttons_1, lvl_buttons_2, lvl_buttons_3).row(lvl_buttons_4, lvl_buttons_5)
 
@@ -22,3 +24,6 @@ kb_lang.add(lang_b1)
 
 kb_action = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 kb_action.row(action_b1, action_b2)
+
+kb_inline_del = InlineKeyboardMarkup()
+kb_inline_del.add(delete_button)

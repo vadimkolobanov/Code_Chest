@@ -33,3 +33,12 @@ async def sql_read(message, state):
 
         except Exception:
             await bot.send_message(message.from_user.id, "Проектов по заданным критериям нет", reply_markup=kb_client)
+
+
+async def sql_all_projects():
+    return base.execute("SELECT * FROM projects").fetchall()
+
+
+async def sql_delete_project(data):
+    base.execute('DELETE FROM projects WHERE name = ?', (data,))
+    base.commit()

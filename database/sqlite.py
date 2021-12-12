@@ -1,23 +1,36 @@
-import sqlite3 as sql
+import psycopg2
+from psycopg2 import Error
 from create_bot import bot
 import random
 from keyboards import kb_client
+from dotenv import load_dotenv
+import os
 
-base = sql.connect('code_chest.db')
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+
+    # Подключение к существующей базе данных
+connection = psycopg2.connect(user=str(os.getenv('DATABASE_USER')),
+                              password=str(os.getenv('DATABAE_PASSWORD')),
+                              host=str(os.getenv('DATABASE_HOST')),
+                              port=str(os.getenv('DATABASE_PORT')),
+                              database=str(os.getenv('DATABASE_NAME')))
+
+base = connection.cursor()
+
 
 def sql_start():
-
-
     if base:
         print('Connected to database')
     base.execute("CREATE TABLE if NOT EXISTS projects(level TEXT, language TEXT, name TEXT, description TEXT)")
-    base.commit()
+    connection.commit()
 
 
 async def sql_add_project(state):
     async with state.proxy() as data:
         base.execute("INSERT INTO projects VALUES (?, ?, ?, ?)", tuple(data.values()))
-        base.commit()
+        connection.commit()
 
 
 async def sql_read(message, state):
@@ -41,4 +54,4 @@ async def sql_all_projects():
 
 async def sql_delete_project(data):
     base.execute("DELETE FROM projects WHERE name = ?", (data,))
-    base.commit()
+    connection.commit()

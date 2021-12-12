@@ -28,7 +28,7 @@ async def sql_read(message, state):
             result = execute.fetchall()
             answer = result[random.randint(0, len(result) - 1)]
             await bot.send_message(message.from_user.id,
-                                   f'Уровень {answer[0]}\n Язык {answer[1]}\n Название проекта {answer[2]}\n Описание {answer[3]}',
+                                   f'Level {answer[0]}\n  {answer[1]}\n Название проекта:\n {answer[2]}\n Описание:\n {answer[3]}',
                                    reply_markup=kb_client)
 
         except Exception:
@@ -40,5 +40,5 @@ async def sql_all_projects():
 
 
 async def sql_delete_project(data):
-    base.execute('DELETE FROM projects WHERE name = ?', (data,))
+    base.execute("DELETE FROM projects WHERE name = ?", (data,))
     base.commit()

@@ -35,7 +35,7 @@ async def add_lvl(message: types.Message, state: FSMContext):
 async def add_language(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['language'] = message.text
-        # data['user']=message.from_user.id
+
     await FSMAdmin.next()
     await message.reply(config.get('RUSSIAN', 'add_project_name'))
 
@@ -52,6 +52,7 @@ async def add_name(message: types.Message, state: FSMContext):
 async def add_description(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['description'] = message.text
+        data['user'] = message.from_user.id
     await FSMAdmin.next()
     await bot.send_message(message.from_user.id, config.get('RUSSIAN', 'get_action'), reply_markup=kb_action)
 

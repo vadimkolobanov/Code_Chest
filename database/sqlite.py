@@ -29,26 +29,27 @@ def sql_start():
 
 async def sql_add_project(state):
     async with state.proxy() as data:
-        try:
-            base.execute("INSERT INTO main_project VALUES (%s, %s, %s, %s, %s)", ('2', 'Python', 'sdf', 'ffd', 200))
-            connection.commit()
-        except Exception as e:
-            print(e)
-            connection.rollback()
+        pass
+        # try:
+        #     base.execute("INSERT INTO main_project VALUES (%s, %s, %s, %s, %s)", ('2', 'Python', 'sdf', 'ffd', 200))
+        #     connection.commit()
+        # except Exception as e:
+        #     print(e)
+        #     connection.rollback()
 
 
 async def sql_read(message, state):
     async with state.proxy() as data:
         try:
-            response = requests.get('https://apicodechest.herokuapp.com/api/projects/').json()
+            url = f"https://apicodechest.herokuapp.com/api/projects/{data['choise_lang']}/{data['choise_level']}"
+            response = requests.get(url).json()
             for item in response:
-                # if item['level'] == data['choise_level'] and item['programming_language']==data['choise_lang']:
                 await bot.send_message(message.from_user.id,
-                                       f"Level {item['level']}\n "
-                                       f"{item['programming_language']}\n"
-                                       f" Название проекта:\n {item['name']}\n "
-                                       f"Описание:\n {item['description']}",
-                                       reply_markup=kb_client)
+                                           f"Level {item['level']}\n "
+                                           f"{item['programming_language']}\n"
+                                           f" Название проекта:\n {item['name']}\n "
+                                           f"Описание:\n {item['description']}",
+                                           reply_markup=kb_client)
 
         except Exception:
             await bot.send_message(message.from_user.id, "Проектов по заданным критериям нет", reply_markup=kb_client)

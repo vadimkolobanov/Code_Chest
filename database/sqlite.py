@@ -13,11 +13,11 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
     # Подключение к существующей базе данных
-connection = psycopg2.connect(user='mkuaedveboclyv',
-                              password='fe4c12212281ce0ac0d4d341866dd91995f137779642e09aad7d48d7b9bb5a04',
-                              host='ec2-63-33-14-215.eu-west-1.compute.amazonaws.com',
+connection = psycopg2.connect(user='dybjzuqpsnzdmf',
+                              password='dc9676a2b5e9e4a7641ee4f9546b7cbfb62c2d28441c6123366e5c984d4e30aa',
+                              host='ec2-54-220-243-77.eu-west-1.compute.amazonaws.com',
                               port='5432',
-                              database='d63vrlqdd4n6cv')
+                              database='d53h1rkf6r67o3')
 
 base = connection.cursor()
 

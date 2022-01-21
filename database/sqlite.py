@@ -23,7 +23,7 @@ our_base = connection.cursor()
 
 def sql_start():
     if our_base:
-        print('Connected to database')
+        print('Connected to databases')
 
 
 async def sql_add_project(state):

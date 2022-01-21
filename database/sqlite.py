@@ -11,11 +11,6 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
-work
-# Подключение к существующей базе данных
-=======
-    # Подключение к существующей базе данных
-master
 connection = psycopg2.connect(user='cwipxlmngfkrtf',
                               password='9d0df424b46c906b7fc24e5d3a639a62e375299d506fe2d711d4652fc0ef4a35',
                               host='ec2-54-77-182-219.eu-west-1.compute.amazonaws.com',
@@ -27,7 +22,7 @@ our_base = connection.cursor()
 
 def sql_start():
     if our_base:
-        print('Connected to database')
+        print('Connected to databases')
 
 
 async def sql_add_project(state):

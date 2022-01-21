@@ -1,23 +1,22 @@
-import psycopg2
-from psycopg2 import Error
-from create_bot import bot
-import random
-from keyboards import kb_client
-from dotenv import load_dotenv
 import os
+
+import psycopg2
 import requests
-import json
+from dotenv import load_dotenv
+
+from create_bot import bot
+from keyboards import kb_client
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
     # Подключение к существующей базе данных
-connection = psycopg2.connect(user='dybjzuqpsnzdmf',
-                              password='dc9676a2b5e9e4a7641ee4f9546b7cbfb62c2d28441c6123366e5c984d4e30aa',
-                              host='ec2-54-220-243-77.eu-west-1.compute.amazonaws.com',
+connection = psycopg2.connect(user='cwipxlmngfkrtf',
+                              password='9d0df424b46c906b7fc24e5d3a639a62e375299d506fe2d711d4652fc0ef4a35',
+                              host='ec2-54-77-182-219.eu-west-1.compute.amazonaws.com',
                               port='5432',
-                              database='d53h1rkf6r67o3')
+                              database='dejq0an5tcejbu')
 
 base = connection.cursor()
 

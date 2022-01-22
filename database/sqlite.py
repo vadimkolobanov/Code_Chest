@@ -1,4 +1,5 @@
 import os
+import random
 
 import psycopg2
 import requests
@@ -10,7 +11,6 @@ from keyboards import kb_client
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
-
 
 connection = psycopg2.connect(user='cwipxlmngfkrtf',
                               password='9d0df424b46c906b7fc24e5d3a639a62e375299d506fe2d711d4652fc0ef4a35',
@@ -49,13 +49,14 @@ async def sql_read(message, state):
         try:
             url = f"https://apicodechest.herokuapp.com/api/projects/{data['choise_lang']}/{data['choise_level']}"
             response = requests.get(url).json()
-            for item in response:
-                await bot.send_message(message.from_user.id,
-                                       f"**Level**: {item['level']}\n "
-                                       f"**{item['programming_language']}**\n"
-                                       f"**Название проекта**:\n {item['name']}\n "
-                                       f"**Описание**:\n {item['description']}",
-                                       reply_markup=kb_client)
+            item = response(random.randint(0, len(response)))
+
+            await bot.send_message(message.from_user.id,
+                                   f"**Level**: {item['level']}\n "
+                                   f"**{item['programming_language']}**\n"
+                                   f"**Название проекта**:\n {item['name']}\n "
+                                   f"**Описание**:\n {item['description']}",
+                                   reply_markup=kb_client)
 
         except Exception:
             await bot.send_message(message.from_user.id, "Проектов по заданным критериям нет", reply_markup=kb_client)

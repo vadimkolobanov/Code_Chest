@@ -34,6 +34,8 @@ async def sql_add_project(state):
             'level': data['level'],
             'programming_language': data['language'],
             'check': False,
+            'id_telegram': data['tg_id'],
+            'username': data['username'],
             'is active': False
 
         }

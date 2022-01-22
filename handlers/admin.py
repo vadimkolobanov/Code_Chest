@@ -4,9 +4,10 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from create_bot import bot
-from keyboards import kb_client, kb_lvl, kb_lang, kb_action
 from create_bot import config
 from database import sqlite
+from keyboards import kb_client, kb_lvl, kb_lang, kb_action
+
 
 # Это класс машины состояний, тоесь поля которые нужно вводить пользователю (Админ)
 class FSMAdmin(StatesGroup):
@@ -52,7 +53,8 @@ async def add_name(message: types.Message, state: FSMContext):
 async def add_description(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['description'] = message.text
-        data['user'] = message.from_user.id
+        data['tg_id'] = message.from_user.id
+        data['username'] = message.from_user.username
     await FSMAdmin.next()
     await bot.send_message(message.from_user.id, config.get('RUSSIAN', 'get_action'), reply_markup=kb_action)
 

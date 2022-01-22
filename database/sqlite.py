@@ -11,6 +11,7 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
+
 connection = psycopg2.connect(user='cwipxlmngfkrtf',
                               password='9d0df424b46c906b7fc24e5d3a639a62e375299d506fe2d711d4652fc0ef4a35',
                               host='ec2-54-77-182-219.eu-west-1.compute.amazonaws.com',
@@ -50,10 +51,10 @@ async def sql_read(message, state):
             response = requests.get(url).json()
             for item in response:
                 await bot.send_message(message.from_user.id,
-                                       f"Level {item['level']}\n "
-                                       f"{item['programming_language']}\n"
-                                       f" Название проекта:\n {item['name']}\n "
-                                       f"Описание:\n {item['description']}",
+                                       f"**Level**: {item['level']}\n "
+                                       f"**{item['programming_language']}**\n"
+                                       f"**Название проекта**:\n {item['name']}\n "
+                                       f"**Описание**:\n {item['description']}",
                                        reply_markup=kb_client)
 
         except Exception:

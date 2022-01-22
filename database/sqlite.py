@@ -3,6 +3,7 @@ import random
 
 import psycopg2
 import requests
+from aiogram import types
 from dotenv import load_dotenv
 
 from create_bot import bot
@@ -34,11 +35,12 @@ async def sql_add_project(state):
             'level': data['level'],
             'programming_language': data['language'],
             'check': False,
-            'id_telegram': data['tg_id'],
+            'id_telegram': str(data['tg_id']),
             'username': data['username'],
             'is active': False
 
         }
+        print(post_date)
         add_project = requests.post('https://apicodechest.herokuapp.com/api/projects/', data=post_date)
         if add_project.status_code == 201:
             print('ok')
@@ -51,14 +53,19 @@ async def sql_read(message, state):
         try:
             url = f"https://apicodechest.herokuapp.com/api/projects/{data['choise_lang']}/{data['choise_level']}"
             response = requests.get(url).json()
-            item = response[random.randint(0, len(response))]
+            print(response)
+            print(len(response))
+            print(random.randint(0, len(response)))
+            item = response[random.randint(0, len(response) - 1)]
 
             await bot.send_message(message.from_user.id,
-                                   f"**Level**: {item['level']}\n "
-                                   f"**{item['programming_language']}**\n"
-                                   f"**Название проекта**:\n {item['name']}\n "
-                                   f"**Описание**:\n {item['description']}",
-                                   reply_markup=kb_client)
+                                   f"Язык <b>{item['programming_language']}</b> Уровень сложности: <b>{item['level']}</b>\n\n"
+                                   f"<b>Название проекта</b>:\n"
+                                   f"<i>{item['name']}</i>\n\n"
+                                   f"<b>Описание</b>:\n"
+                                   f"<i>{item['description']}</i>",
+                                   reply_markup=kb_client, parse_mode=types.ParseMode.HTML)
 
-        except Exception:
+        except Exception as e:
+            print(e)
             await bot.send_message(message.from_user.id, "Проектов по заданным критериям нет", reply_markup=kb_client)

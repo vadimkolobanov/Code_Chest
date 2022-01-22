@@ -49,7 +49,7 @@ async def sql_read(message, state):
         try:
             url = f"https://apicodechest.herokuapp.com/api/projects/{data['choise_lang']}/{data['choise_level']}"
             response = requests.get(url).json()
-            item = response(random.randint(0, len(response)))
+            item = response[random.randint(0, len(response))]
 
             await bot.send_message(message.from_user.id,
                                    f"**Level**: {item['level']}\n "

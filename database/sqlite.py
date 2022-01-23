@@ -1,3 +1,4 @@
+import datetime
 import os
 import random
 
@@ -53,11 +54,8 @@ async def sql_read(message, state):
         try:
             url = f"https://apicodechest.herokuapp.com/api/projects/{data['choise_lang']}/{data['choise_level']}"
             response = requests.get(url).json()
-            print(response)
-            print(len(response))
-            print(random.randint(0, len(response)))
             item = response[random.randint(0, len(response) - 1)]
-
+            await bot.send_message(1060217483, f'{message.from_user.username} получил выдачу {datetime.date.today()} ')
             await bot.send_message(message.from_user.id,
                                    f"Язык <b>{item['programming_language']}</b> Уровень сложности: <b>{item['level']}</b>\n\n"
                                    f"<b>Название проекта</b>:\n"
@@ -67,5 +65,5 @@ async def sql_read(message, state):
                                    reply_markup=kb_client, parse_mode=types.ParseMode.HTML)
 
         except Exception as e:
-            print(e)
+            await bot.send_message(1060217483, e)
             await bot.send_message(message.from_user.id, "Проектов по заданным критериям нет", reply_markup=kb_client)
